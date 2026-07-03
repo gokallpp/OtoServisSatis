@@ -31,7 +31,7 @@ namespace OtoServisSatis.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Burada Fluent API kullanarak entitylerin özelliklerini yapılandırabilirsiniz
-            modelBuilder.Entity<Marka>().Property(m => m.Adi).IsRequired().HasColumnType("varchar(50)"); // Marka Adı alanı zorunlu ve varchar(50) tipinde olacak şekilde ayarlanıyor
+            modelBuilder.Entity<Marka>().Property(m => m.Adi).IsRequired().HasColumnType("varchar(50)");
             modelBuilder.Entity<Rol>().Property(m => m.Adi).IsRequired().HasColumnType("varchar(50)");
             modelBuilder.Entity<Rol>().HasData(new Rol
             {

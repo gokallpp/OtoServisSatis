@@ -1,4 +1,7 @@
 using OtoServisSatis.Data;
+using OtoServisSatis.Service.Abstract;
+using OtoServisSatis.Service.Concrete;
+using System.Net;
 
 namespace OtoServisSatis.WebUI
 {
@@ -12,6 +15,7 @@ namespace OtoServisSatis.WebUI
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddDbContext<DatabaseContext>();
+            builder.Services.AddTransient(typeof(IService<>), typeof(Service<>));
 
             var app = builder.Build();
 
@@ -29,7 +33,13 @@ namespace OtoServisSatis.WebUI
 
             app.UseAuthorization();
 
-            app.MapStaticAssets();
+
+            endpoints.MapControllerRoute(
+                name: "areas",
+                pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+                );
+
+            app.MapStaticAssets();        
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}")
