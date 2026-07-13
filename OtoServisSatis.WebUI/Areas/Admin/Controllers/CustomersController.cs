@@ -92,19 +92,22 @@ namespace OtoServisSatis.WebUI.Areas.Admin.Controllers
         }
 
         // GET: CustomersController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> DeleteAsync(int id)
         {
-            return View();
+            var model = await _service.FindAsync(id);
+            return View(model);
         }
 
         // POST: CustomersController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> Delete(int id, Musteri musteri)
         {
             try
             {
-                return RedirectToAction(nameof(IndexAsync));
+                _service.Delete(musteri);
+                await _service.SaveAsync();
+                return RedirectToAction(nameof(Index));
             }
             catch
             {
