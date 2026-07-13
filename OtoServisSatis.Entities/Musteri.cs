@@ -24,7 +24,7 @@ namespace OtoServisSatis.Entities
         public string? Telefon { get; set; }
         public string? Notlar { get; set; }
         [Display(Name = "Araç")]
-        public Arac Arac { get; set; }  // Müşterinin satın aldığı aracı temsil eden bir ilişki
+        public Arac? Arac { get; set; }  // Müşterinin satın aldığı aracı temsil eden bir ilişki
         [Display(Name = "Ad Soyad"), ScaffoldColumn(false)]
         public string? AdSoyad
         {
