@@ -1,7 +1,7 @@
 using OtoServisSatis.Data;
 using OtoServisSatis.Service.Abstract;
 using OtoServisSatis.Service.Concrete;
-using System.Net;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace OtoServisSatis.WebUI
 {
@@ -17,6 +17,23 @@ namespace OtoServisSatis.WebUI
             builder.Services.AddDbContext<DatabaseContext>();
             builder.Services.AddTransient(typeof(IService<>), typeof(Service<>));
 
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(x =>
+                {
+                    x.LoginPath = "/Admin/Login";
+                    x.AccessDeniedPath = "/AccessDenied";
+                    x.LogoutPath = "/Admin/Logout";
+                    x.Cookie.Name = "Admin";
+                    x.Cookie.MaxAge = TimeSpan.FromDays(7);
+                    x.Cookie.IsEssential = true;
+                });
+
+            builder.Services.AddAuthorization(x =>
+            {
+                x.AddPolicy("AdminPolicy", policy => policy.RequireClaim("Role", "Admin"));
+                x.AddPolicy("UserPolicy", policy => policy.RequireClaim("Role", "User"));
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -31,6 +48,7 @@ namespace OtoServisSatis.WebUI
             app.UseHttpsRedirection();
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
 
