@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using OtoServisSatis.Entities;
+using OtoServisSatis.Service.Abstract;
 using OtoServisSatis.WebUI.Models;
 using System.Diagnostics;
 
@@ -6,16 +8,24 @@ namespace OtoServisSatis.WebUI.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly IService<Slider> _service;
+        private readonly IService<Arac> _serviceArac;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IService<Slider> service, IService<Arac> serviceArac)
         {
-            _logger = logger;
+            _service = service;
+            _serviceArac = serviceArac;
         }
 
-        public IActionResult Index()
+        //Slider'ları listelemek için Index action'ı
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var model = new HomePageViewModel()
+            {
+                Sliders = await _service.GetAllAsync(),
+                Araclar = await _serviceArac.GetAllAsync(a => a.Anasayfa),
+            };
+            return View(model);
         }
 
         public IActionResult Privacy()
