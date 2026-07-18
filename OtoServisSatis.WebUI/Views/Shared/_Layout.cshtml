@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - OtoServisSatis.WebUI</title>
     <script type="importmap"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -43,16 +41,9 @@
                     <input name="q" type="search" class="form-control form-control-dark" placeholder="Ara..." aria-label="Search">
                 </form>
                 <div class="text-end">
-                    @if (Context.User.Identity.IsAuthenticated)
-                    {
-                        <a asp-controller="Account" asp-action="Index" class="btn btn-primary me-2">Hesabım</a>
-                        <a asp-controller="Account" asp-action="Logout" class="btn btn-primary">Oturumu Kapat</a>
-                    }
-                    else
-                    {
-                        <a asp-controller="Account" asp-action="Login" class="btn btn-primary me-2">Giriş</a>
-                        <a asp-controller="Account" asp-action="Register" class="btn btn-primary">Kaydol</a>
-                    }
+
+                    <a asp-controller="Account" asp-action="Login" class="btn btn-primary me-2">Giriş</a>
+                    <a asp-controller="Account" asp-action="Register" class="btn btn-primary">Kaydol</a>
 
                 </div>
 
