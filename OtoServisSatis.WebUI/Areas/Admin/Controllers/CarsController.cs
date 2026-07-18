@@ -11,18 +11,18 @@ namespace OtoServisSatis.WebUI.Areas.Admin.Controllers
     [Area("Admin"), Authorize(Policy = "UserPolicy")] 
     public class CarsController : Controller
     {
-        private readonly IService<Arac> _service;
+        private readonly ICarService _service;
         private readonly IService<Marka> _serviceMarka;
 
-        public CarsController(IService<Arac> service, IService<Marka> serviceMarka)
+        public CarsController(ICarService service, IService<Marka> serviceMarka)
         {
             _service = service;
             _serviceMarka = serviceMarka;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> IndexAsync()
         {
-            var model = await _service.GetAllAsync();
+            var model = await _service.GetCustomCarsList();
             return View(model);
         }
 
