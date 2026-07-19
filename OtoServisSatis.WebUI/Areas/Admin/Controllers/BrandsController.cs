@@ -7,7 +7,7 @@ using OtoServisSatis.Service.Abstract;
 
 namespace OtoServisSatis.WebUI.Areas.Admin.Controllers
 {
-    [Area("Admin"),Authorize (Policy = "AdminPolicy")]
+    [Area("Admin"), Authorize(Policy = "AdminPolicy")] // Not: Bu controller sadece Admin rolüne sahip kullanıcılar tarafından erişilebilir.
     public class BrandsController : Controller
     {
         private readonly IService<Marka> _service;

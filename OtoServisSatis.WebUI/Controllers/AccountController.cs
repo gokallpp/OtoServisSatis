@@ -1,7 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using OtoServisSatis.Entities;
 using OtoServisSatis.Service.Abstract;
+using OtoServisSatis.WebUI.Models;
+using System.Security.Claims;
 
 namespace OtoServisSatis.WebUI.Controllers
 {
@@ -16,6 +20,7 @@ namespace OtoServisSatis.WebUI.Controllers
             _serviceRol = serviceRol;
         }
 
+        [Authorize(Policy = "CustomerPolicy")]
         public IActionResult Index()
         {
             return View();
@@ -32,7 +37,7 @@ namespace OtoServisSatis.WebUI.Controllers
             {
                 try
                 {
-                    var rol = await _serviceRol.GetAsync(r=>r.Adi =="Customer");
+                    var rol = await _serviceRol.GetAsync(r => r.Adi == "Customer");
                     if (rol == null)
                     {
                         ModelState.AddModelError("", "Kayıt Başarısız!");
@@ -59,9 +64,49 @@ namespace OtoServisSatis.WebUI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login(string email, string password)
+        public async Task<IActionResult> LoginAsync(CustomerLoginViewModel customerViewModel)
         {
+            try
+            {
+                var account = await _service.GetAsync(k => k.Email == customerViewModel.Email && k.Sifre == customerViewModel.Sifre && k.AktifMi == true);
+                if (account == null)
+                {
+                    ModelState.AddModelError("", "Giriş Başarısız!");
+                }
+                else
+                {
+                    var rol = _serviceRol.Get(r => r.Id == account.RolId); // Rol bilgilerini al
+                    var claims = new List<Claim>()
+                    {
+                        new Claim(ClaimTypes.Name, account.Adi)
+                    };
+                    if (rol is not null)
+                    {
+                        //claims.Add(new Claim("Role", rol.Adi));
+                        claims.Add(new Claim(ClaimTypes.Role, rol.Adi));
+                    }
+                    var userIdentity = new ClaimsIdentity(claims, "Login");
+                    ClaimsPrincipal principal = new ClaimsPrincipal(userIdentity);
+                    await HttpContext.SignInAsync(principal);
+                    if (rol.Adi == "Admin")
+                    {
+                        return Redirect("/Admin");
+                    }
+                    return Redirect("/Account");
+                }
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError("", "Hata Oluştu!");
+            }
+
             return View();
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync();
+            return Redirect("/");
         }
     }
 }
