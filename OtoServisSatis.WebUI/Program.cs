@@ -19,7 +19,8 @@ namespace OtoServisSatis.WebUI
 
             builder.Services.AddTransient(typeof(IService<>), typeof(Service<>));
             builder.Services.AddTransient<ICarService, CarService>();
-            
+            builder.Services.AddTransient<IUserService, UserService>();
+
 
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(x =>
