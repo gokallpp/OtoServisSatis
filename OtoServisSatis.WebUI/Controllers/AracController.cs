@@ -3,6 +3,7 @@ using OtoServisSatis.Entities;
 using OtoServisSatis.Service.Abstract;
 using OtoServisSatis.Service.Concrete;
 using OtoServisSatis.WebUI.Models;
+using OtoServisSatis.WebUI.Utils;
 using System.Security.Claims;
 
 namespace OtoServisSatis.WebUI.Controllers
@@ -69,7 +70,7 @@ namespace OtoServisSatis.WebUI.Controllers
             var model = await _serviceArac.GetCustomCarsList(c => c.SatistaMi && c.Marka.Adi.Contains(q) || c.KasaTipi.Contains(q) || c.Modeli.Contains(q));
             return View(model);
         }
-
+        // bilgi formu gönderildiğinde çalışacak action metodu
         [HttpPost]
         public async Task<IActionResult> MusteriKayit(Musteri musteri)
         {
@@ -79,11 +80,18 @@ namespace OtoServisSatis.WebUI.Controllers
                 {
                     await _serviceMusteri.AddAsync(musteri);
                     await _serviceMusteri.SaveAsync();
+                    await MailHelper.SendMailAsync(musteri);
+                    TempData["Message"] = "<div class=\"alert alert-success\" role=\"alert\">Talebiniz Alınmıştır. Teşekkürler!</div>";
+                    TempData["MessageType"] = "success";
                     return Redirect("/Arac/Index/" + musteri.AracId);
                 }
                 catch
                 {
-                    ModelState.AddModelError("", "hata oluştur");
+                    TempData["Message"] = "<div class=\"alert alert-danger\" role=\"alert\">Talebiniz alınamadı.</div>";
+                    TempData["MessageType"] = "danger";
+                    ModelState.AddModelError("", "Hata oluştu");
+
+                    return Redirect("/Arac/Index/" + musteri.AracId);
                 }    
             }
             return View();
