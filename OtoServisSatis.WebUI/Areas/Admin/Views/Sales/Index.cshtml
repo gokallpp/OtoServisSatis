@@ -32,13 +32,13 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.SatisFiyati)
+                    @item.SatisFiyati.ToString("c")
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.SatisTarihi)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Arac.KasaTipi)
+                    @Html.DisplayFor(modelItem => item.Arac.AracBilgi)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Musteri.AdSoyad)

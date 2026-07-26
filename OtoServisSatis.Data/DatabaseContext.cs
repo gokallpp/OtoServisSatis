@@ -23,7 +23,7 @@ namespace OtoServisSatis.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Server=GÖKALP\\SQLEXPRESS;Database=OtoServisSatis;Integrated Security=True;TrustServerCertificate=True;");
-
+            optionsBuilder.UseLazyLoadingProxies();
             optionsBuilder.ConfigureWarnings(warnings => warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
 
         }
@@ -47,7 +47,7 @@ namespace OtoServisSatis.Data
                 Adi = "Kullanici",
                 AktifMi = true,
                 EklemeTarihi = DateTime.Now,
-                Email = "admin@otoservissatis.tc",
+                Email = "admin@gmail.com",
                 KullaniciAdi = "admin",
                 Sifre = "123456",
                 RolId = 1,
